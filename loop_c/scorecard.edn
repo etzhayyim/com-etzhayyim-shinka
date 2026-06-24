@@ -1,0 +1,27 @@
+{:schema "shinka.loop-c/scorecard.v0",
+ :ts "2026-06-17",
+ :n-candidates 4,
+ :n-scoreable 1,
+ :ranked
+ [{:id "maxwell-diffusion-1",
+   :family :diffusion,
+   :score 0.64,
+   :evidence :t2-task-measured,
+   :route :propose-candidate}
+  {:id "maxwell-1",
+   :family :ar,
+   :score nil,
+   :evidence :t2-landscape-only,
+   :route :insufficient-evidence}
+  {:id "oka-mmsheaf",
+   :family :sheaf,
+   :score nil,
+   :evidence :t0-feasible-only,
+   :route :insufficient-evidence}
+  {:id "baien-1.58",
+   :family :bitnet,
+   :score nil,
+   :evidence :t0-feasible-only,
+   :route :insufficient-evidence}],
+ :note
+ "R0: ranks existing family on REAL measured fitness only; unmeasured → insufficient-evidence; no architecture invented; promotion to train/deploy is member-CACAO-gated (ADR-2606172200 D5)."}
