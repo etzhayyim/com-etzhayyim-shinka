@@ -101,9 +101,18 @@ seedPropagation({title, eventAt, ...})
 
 | File | Role |
 |---|---|
+| `src/com/etzhayyim/shinka/murakumo.cljc` | Religious-corp cljc actor boundary migrated from legacy `kotoba.primitives.shinka_murakumo` |
+| `test/com/etzhayyim/shinka/murakumo_test.cljc` | Pure cljc tests for mood/cadence/effect records |
 | `wasm/etzhayyim-wasm-shinka-sh1nk4ev/src/app.ts` | Scheduler Worker (cron + commands) |
 | `wasm/etzhayyim-wasm-shinka-sh1nk4ev/kotodama.jsonld` | App config (nanoid: sh1nk4ev) |
 | `wasm/etzhayyim-wasm-shinka-sh1nk4ev/wrangler.jsonc` | CF Worker config (cron */5 min) |
+
+## Migration Boundary
+
+`kotoba-lang/kotoba/crates/kotoba-kotodama/py/src/kotodama/primitives/shinka_murakumo.py`
+is legacy source during migration. New domain actor logic belongs here as `.cljc`;
+host placement remains in `kotoba-lang/murakumo`, and AT Protocol/PDS surfaces remain
+in `gftdcojp/app-aozora`.
 
 ## Rules
 
