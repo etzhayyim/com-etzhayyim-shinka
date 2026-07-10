@@ -7,7 +7,20 @@
 (ns rank (:require [clojure.edn :as edn] [clojure.string :as str] [clojure.java.io :as io]))
 
 (def here (-> *file* io/file .getParent))
-(def G (edn/read-string (slurp (io/file here "genotypes.edn"))))
+
+;; genotypes.edn is now Datomic/Datascript tx-data ([{:db/id -1 :loop-c.genotypes/... ...}])
+;; per scripts/edn-datomize.bb (repo-wide EDN datomize effort). Reconstitute the original
+;; bare-keyword map here so the rest of this script is unchanged.
+(defn- unblob [v]
+  (if (string? v)
+    (try (let [parsed (edn/read-string v)] (if (coll? parsed) parsed v))
+         (catch Exception _ v))
+    v))
+(defn- reconstitute-entity [tx-data]
+  (into {} (map (fn [[k v]] [(keyword (name k)) (unblob v)]))
+        (dissoc (first tx-data) :db/id)))
+
+(def G (reconstitute-entity (edn/read-string (slurp (io/file here "genotypes.edn")))))
 (def W (:weights G))
 
 (defn flatness
