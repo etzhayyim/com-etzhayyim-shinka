@@ -1,7 +1,0 @@
-{:paths ["src" "test"]
- :tasks
- {test {:doc "Run cljc actor tests."
-        :requires ([clojure.test :as t]
-                   [com.etzhayyim.shinka.murakumo-test])
-        :task (let [{:keys [fail error]} (t/run-tests 'com.etzhayyim.shinka.murakumo-test)]
-                (System/exit (if (pos? (+ (or fail 0) (or error 0))) 1 0)))}}}

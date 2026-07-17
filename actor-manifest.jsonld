@@ -263,24 +263,16 @@
   ],
   "selfEvolutionEngine": {
     "adr": "ADR-2606142200",
-    "enginePath": "20-actors/shinka/cells/shinka_engine",
-    "doc": "20-actors/shinka/cells/CLAUDE.md",
-    "note": "Capability+weight self-evolution engine (co-scientist Loop A + Robin/RSi Loop B + flywheel); a SIBLING of the social-evolution pipelines above, sharing this DID. Evolves actors/cells/code + the Maxwell weight, not social posting cadence.",
-    "loopA": ["propose", "reflect", "cluster", "rank", "recombine", "synthesize"],
-    "loopB": ["hypothesis", "experiment", "analyse", "update"],
-    "supervisor": "ibuki-beat-cycle",
+    "enginePath": "src/com/etzhayyim/shinka/asi.cljc",
+    "doc": "ASI.md",
+    "note": "Kotoba/Clojure self-evolution outer loop. Bounded evaluations dispatch only through cloud-murakumo; evidence-backed promotion is recorded through kotoba-fleet and always stops for member signoff.",
+    "libraries": ["io.github.kotoba-lang/murakumo", "io.github.kotoba-lang/kotoba-fleet"],
+    "loopA": ["bounded-evaluation", "evidence-cid", "proposal"],
+    "loopB": ["benchmark", "improvement-gate", "member-signoff"],
+    "supervisor": "shinka-asi-beat",
     "invariants": ["append-only-:db/add", "no-auto-merge-CACAO-leash", "murakumo-only"],
     "deployGate": ">=250 steps OR >=+5pp microbench",
-    "researchTracks": {
-      "A": "fleet test-time compute",
-      "B": "speculative+TLT adaptive drafter",
-      "C": "MatFormer E2B/E4B routing",
-      "D": "Datom-log RAG grounding",
-      "E": "verifier-grounded reward",
-      "F": "distillation flywheel",
-      "G": "fleet quantization"
-    },
-    "status": "S0-landed (deterministic kernel, 305 tests / 18 suites; live fleet wiring is operator/leash-gated at S1)"
+    "status": "S1-ready: Clojure planner and cloud-murakumo job boundary are implemented and tested; activation remains operator/leash-gated and requires healthy fleet observations."
   },
   "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
   "standardStatus": "required",
