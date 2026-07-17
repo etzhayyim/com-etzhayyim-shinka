@@ -1,0 +1,19 @@
+{:candidate-id "candidate-example"
+ :benchmark-id "benchmark-example"
+ :prompts ["Evaluate the proposed change against the pinned benchmark."]
+ :max-tokens 256
+ :model {:model/id "qwen-agentworld-35b-a3b"
+         :model/layers 40
+         :model/weight-bytes 22100000000
+         :model/kv-heads 8}
+ ;; Replace with a fresh cloud-murakumo fleet observation.  An unhealthy or
+ ;; omitted node causes `bb asi-check` to exit 2 without dispatching anything.
+ :nodes [{:name "canary"
+          :health :down
+          :caps #{:inference}
+          :mem-bytes 17179869184
+          :link-gbps 10}]
+ :attestations #{:council-charter-attestation
+                 :murakumo-only-inference-baseline
+                 :append-only-gate-baseline
+                 :kotoba-only-substrate-baseline}}

@@ -1,0 +1,24 @@
+;; Reviewed proposal payload for the currently observed cloud-murakumo gateway.
+;; Submit it only through the kotoba-fleet governor with a member CACAO; it is
+;; intentionally not an executable PUT request.
+{:work "cloud-murakumo/model-catalog/qwen-agentworld-35b-a3b"
+ :agent "did:web:shinka.etzhayyim.com"
+ :idempotency-key "shinka/model-reconcile/qwen-agentworld-35b-a3b"
+ :payload
+ {:kind :cloud-murakumo/model-catalog-reconciliation
+  :requires-member-cacao true
+  :catalog-model-id "qwen-agentworld-35b-a3b"
+  :endpoint "https://infer.murakumo.cloud/v1/chat/completions"
+  :runtime-model-ids
+  ["/home/gad/models/Qwen3.6-35B-A3B-GGUF/Qwen3.6-35B-A3B-Q4_K_M.gguf"]
+  :recommended-action :replace-serving-model
+  :recommended-retire-serving-id "qwen-agentworld-35b-a3b"
+  :recommended-upsert
+  {:model/id "qwen3.6-35b-a3b"
+   :model/family "Qwen3.6"
+   :model/format :gguf
+   :model/layers 40
+   :model/params-b 35
+   :model/active-params-b 3
+   :model/context 262144
+   :model/weight-bytes 21200000000}}}
