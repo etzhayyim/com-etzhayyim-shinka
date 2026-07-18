@@ -1,0 +1,18 @@
+{:manifest/version 1
+ :actor/name :shinka
+ :actor/did "did:web:shinka.etzhayyim.com"
+ :actor/display-name "Shinka — Actor Evolution Scheduler"
+ :actor/nanoid "sh1nk4ev"
+ :actor/performer-type :service
+ :actor/description "Central scheduler and self-evolution engine for logical actors."
+ :actor/capabilities #{:graph/query :graph/write :agent/chat :agent/invoke :derive/social}
+ :actor/runtime :k8s-langserver
+ :actor/edge :sveltekit-proxy
+ :actor/heartbeat-required? true
+ :governance/classification :internal
+ :governance/raci :responsible
+ :source/engine "src/shinka/engine"
+ :source/loop-c "src/shinka/loop_c"
+ :data/root "data"
+ :contracts/catalog "contracts/catalog.edn"
+ :wire/root "wire"}

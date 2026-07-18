@@ -1,0 +1,65 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.apps.shinka.forceShinka",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Auto-generated stub lexicon (F-Plan F2 bootstrap 2026-04-13). Tighten schema when migrating the app.",
+      "x-bootstrap": true,
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "did": {
+              "type": "string"
+            }
+          },
+          "required": []
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "boolean"
+            },
+            "calm": {
+              "type": "string"
+            },
+            "stress": {
+              "type": "string"
+            },
+            "gratitude": {
+              "type": "string"
+            },
+            "focus": {
+              "type": "string"
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "did": {
+              "type": "integer"
+            },
+            "mood": {
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        }
+      }
+    }
+  }
+}

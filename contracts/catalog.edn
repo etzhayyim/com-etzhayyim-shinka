@@ -1,0 +1,19 @@
+{:catalog/version 1
+ :catalog/canonical-format :edn
+ :actor :shinka
+ :contracts
+ [{:kind :atproto-lexicon :name :claim-jobs :wire/path "wire/contracts/lexicons/claimJobs.json"}
+  {:kind :atproto-lexicon :name :force-shinka :wire/path "wire/contracts/lexicons/forceShinka.json"}
+  {:kind :atproto-lexicon :name :generate-propagation-chain :wire/path "wire/contracts/lexicons/generatePropagationChain.json"}
+  {:kind :atproto-lexicon :name :list-partitions :wire/path "wire/contracts/lexicons/listPartitions.json"}
+  {:kind :atproto-lexicon :name :list-sponsorable :wire/path "wire/contracts/lexicons/listSponsorable.json"}
+  {:kind :atproto-lexicon :name :list-tasks :wire/path "wire/contracts/lexicons/listTasks.json"}
+  {:kind :atproto-lexicon :name :queue-stats :wire/path "wire/contracts/lexicons/queueStats.json"}
+  {:kind :atproto-lexicon :name :seed-propagation :wire/path "wire/contracts/lexicons/seedPropagation.json"}
+  {:kind :atproto-lexicon :name :sponsor-event :wire/path "wire/contracts/lexicons/sponsorEvent.json"}
+  {:kind :atproto-lexicon :name :stats :wire/path "wire/contracts/lexicons/stats.json"}
+  {:kind :bpmn :name :batch-tick :wire/path "wire/contracts/bpmn/batchTick.bpmn"}
+  {:kind :bpmn :name :manual-tick :wire/path "wire/contracts/bpmn/manualTick.bpmn"}]
+ :identity
+ [{:kind :did-document :wire/path "wire/identity/did.json"}
+  {:kind :actor-profile :wire/path "wire/identity/profile.json"}]}

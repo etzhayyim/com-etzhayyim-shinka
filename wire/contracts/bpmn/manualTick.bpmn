@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  F5 expansion — `shinka.manualTick` — on-demand shinka tick for a given
+  actor DID. Lets clients force a heartbeat outside the R/PT15M timer
+  cadence (debug, admin, demo).
+
+  Flow:
+    Start (input: actor)
+      → com.etzhayyim.shinka.tick   (wraps `shinka_tick_actor` SQL UDF)
+      → End
+
+  Variables on the instance:
+    in:  actor (required DID)
+    out: tickActor, tickMood, tickActions, hbWritten, evoWritten, tickMs
+-->
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+    id="Definitions_shinka_manual_tick"
+    targetNamespace="https://etzhayyim.ai/bpmn/shinka"
+    exporter="hand-written"
+    exporterVersion="1.0">
+  <bpmn:process id="shinka_manual_tick" name="shinka manual tick" isExecutable="true">
+
+    <bpmn:startEvent id="Start" name="tick request">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Task_Tick"/>
+
+    <bpmn:serviceTask id="Task_Tick" name="shinka tick">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="com.etzhayyim.shinka.tick"/>
+        <zeebe:ioMapping>
+          <zeebe:input source="=string(actor)" target="actor"/>
+          <zeebe:output source="=actor"            target="tickActor"/>
+          <zeebe:output source="=mood"             target="tickMood"/>
+          <zeebe:output source="=actions"          target="tickActions"/>
+          <zeebe:output source="=heartbeatWritten" target="hbWritten"/>
+          <zeebe:output source="=evolutionWritten" target="evoWritten"/>
+          <zeebe:output source="=tickMs"           target="tickMs"/>
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Tick" targetRef="End"/>
+
+    <bpmn:endEvent id="End" name="done">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+
+  </bpmn:process>
+</bpmn:definitions>

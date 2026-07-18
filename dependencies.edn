@@ -1,0 +1,6 @@
+{:dependencies/version 1
+ :runtime
+ [{:repo "orgs/kotoba-lang/murakumo" :purpose :inference}
+  {:repo "orgs/kotoba-lang/kotoba-fleet" :purpose :fleet-sampling}]
+ :deprecated #{:go :tinygo}
+ :go/artifacts []}

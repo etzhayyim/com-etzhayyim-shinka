@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  F5 expansion — `shinka.batchTick` — XRPC-triggered fan-out actor
+  that ticks every distinct DID in `vertex_actor_shinka_state`. Mirrors
+  the semantics of the timer-driven `shinka_cron_tick` but starts from
+  a regular `POST /xrpc/com.etzhayyim.apps.shinka.batchTick` so callers can
+  force a batch tick at will (admin, integration test, cold-start after
+  deploy).
+
+  Exercises the primitive combination we haven't covered yet:
+    generic.db.select (one row per actor)
+       → BPMN multi-instance parallel loop
+            → com.etzhayyim.shinka.tick per row
+
+  Adding an actor to the roster = INSERT to vertex_actor_shinka_state.
+  No BPMN edit.
+-->
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+    id="Definitions_shinka_batch_tick"
+    targetNamespace="https://etzhayyim.ai/bpmn/shinka"
+    exporter="hand-written"
+    exporterVersion="1.0">
+  <bpmn:process id="shinka_batch_tick" name="shinka batch tick" isExecutable="true">
+
+    <bpmn:startEvent id="Start" name="batch requested">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Task_ListActors"/>
+
+    <bpmn:serviceTask id="Task_ListActors" name="list distinct actors">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="generic.db.select"/>
+        <zeebe:ioMapping>
+          <zeebe:input source="=&quot;vertex_actor_shinka_state&quot;" target="table"/>
+          <!-- DISTINCT inside the columns fragment dedups across the
+               (repo_did, collection) composite PK so the multi-instance
+               loop sees one row per actor. -->
+          <zeebe:input source="=&quot;DISTINCT repo_did&quot;"         target="columns"/>
+          <zeebe:input source="=200"                                   target="limit"/>
+          <zeebe:input source="=&quot;repo_did&quot;"                  target="orderBy"/>
+          <zeebe:output source="=rows"     target="actorRows"/>
+          <zeebe:output source="=rowCount" target="actorRowCount"/>
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ListActors" targetRef="Task_Tick"/>
+
+    <bpmn:serviceTask id="Task_Tick" name="shinka tick (multi-instance)">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="com.etzhayyim.shinka.tick"/>
+        <zeebe:ioMapping>
+          <zeebe:input source="=row.repo_did" target="actor"/>
+          <zeebe:output source="=mood"             target="tickMood"/>
+          <zeebe:output source="=heartbeatWritten" target="hbWritten"/>
+          <zeebe:output source="=evolutionWritten" target="evoWritten"/>
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <!-- isSequential=false → parallel instances, bounded only by
+           zeebe-worker concurrency for com.etzhayyim.shinka.tick. For a
+           small actor roster this is harmless; at higher fan-out
+           isSequential="true" or a worker-side semaphore is safer.
+           loopCharacteristics must live inside the multiInstance
+           element's own extensionElements, not the task's. -->
+      <bpmn:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics
+            inputCollection="=actorRows"
+            inputElement="row"/>
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Tick" targetRef="End"/>
+
+    <bpmn:endEvent id="End" name="done">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+
+  </bpmn:process>
+</bpmn:definitions>
